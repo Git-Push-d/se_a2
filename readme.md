@@ -186,3 +186,24 @@ If you are running into errors in gitpod when updateding your github actions fil
 ## Database Issues
 
 If you are adding models you may need to migrate the database with the commands given in the previous database migration section. Alternateively you can delete you database file.
+
+# Student incentive system
+
+This is a simple command-line application for managing student community service hours.
+
+## Features
+- **Student Login**
+  - Request hours confirmation from staff
+  - View accolades (10/25/50 hour milestones)
+  - View leaderboard
+
+- **Staff Login**
+  - Log hours for students
+  - Confirm hours requested by students
+  - View leaderboard
+
+## Installation & Setup
+Clone the repository:
+
+```bash
+git https://github.com/DominiqueChotack/CommunityTracker_SE-A1-.git
