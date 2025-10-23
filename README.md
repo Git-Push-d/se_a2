@@ -206,4 +206,522 @@ This is a simple command-line application for managing student community service
 Clone the repository:
 
 ```bash
-git https://github.com/DominiqueChotack/CommunityTracker_SE-A1-.git
+git clone https://github.com/DominiqueChotack/CommunityTracker_SE-A1-.git
+cd CommunityTracker_SE-A1-
+```
+
+Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+Initialize the database:
+```bash
+flask init
+```
+
+Run the application:
+```bash
+python3 run.py
+# or
+flask run
+```
+
+The application will be available at `http://localhost:5000`
+
+---
+
+# API Documentation
+
+This application provides a REST API for managing student community service hours. All endpoints require JWT authentication unless otherwise specified.
+
+## Quick Start
+
+### 1. Run the Application
+```bash
+python3 run.py
+```
+
+### 2. Initialize Sample Data
+```bash
+flask init
+```
+This creates sample users:
+- Students: `alice`, `bob`, `charlie` (password: `password`)
+- Staff: `staff1`, `staff2` (password: `password`)
+
+### 3. Test the API
+You can use curl, Postman, or any HTTP client to test the endpoints.
+
+---
+
+## Authentication Endpoints
+
+### Login
+**POST** `/api/login`
+
+Authenticate a user and receive a JWT token.
+
+**Request Body:**
+```json
+{
+  "username": "alice",
+  "password": "password"
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "access_token": "eyJ0eXAiOiJKV1QiLCJhbGc..."
+}
+```
+
+**Response (401 Unauthorized):**
+```json
+{
+  "message": "bad username or password given"
+}
+```
+
+**Example:**
+```bash
+curl -X POST http://localhost:5000/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"alice","password":"password"}'
+```
+
+---
+
+### Identify Current User
+**GET** `/api/identify`
+
+Get information about the currently authenticated user.
+
+**Headers:**
+- `Authorization: Bearer <token>` or Cookie with JWT
+
+**Response (200 OK):**
+```json
+{
+  "message": "username: alice, id : 1"
+}
+```
+
+**Example:**
+```bash
+curl -X GET http://localhost:5000/api/identify \
+  -H "Cookie: access_token=<your_token>"
+```
+
+---
+
+### Logout
+**GET** `/api/logout`
+
+Logout the current user (clears JWT cookie).
+
+**Response (200 OK):**
+```json
+{
+  "message": "Logged Out!"
+}
+```
+
+---
+
+## Student Endpoints
+
+### Get All Students (Staff Only)
+**GET** `/api/students`
+
+Retrieve a list of all students.
+
+**Authorization:** Staff only
+
+**Response (200 OK):**
+```json
+[
+  {
+    "id": 1,
+    "username": "alice",
+    "name": "Alice",
+    "user_type": "student",
+    "total_hours": 15,
+    "accolades": [10],
+    "confirmation_requested": false
+  }
+]
+```
+
+**Response (403 Forbidden):**
+```json
+{
+  "error": "Unauthorized"
+}
+```
+
+---
+
+### Get Student by ID
+**GET** `/api/students/<student_id>`
+
+Get details of a specific student.
+
+**Authorization:** 
+- Students can only view their own profile
+- Staff can view any student
+
+**Response (200 OK):**
+```json
+{
+  "id": 1,
+  "username": "alice",
+  "name": "Alice",
+  "user_type": "student",
+  "total_hours": 15,
+  "accolades": [10],
+  "confirmation_requested": false
+}
+```
+
+**Response (403 Forbidden / 404 Not Found):**
+```json
+{
+  "error": "Unauthorized"
+}
+```
+
+---
+
+### Get Current Student Profile
+**GET** `/api/students/me`
+
+Get the profile of the currently logged-in student.
+
+**Authorization:** Student only
+
+**Response (200 OK):**
+```json
+{
+  "id": 1,
+  "username": "alice",
+  "name": "Alice",
+  "user_type": "student",
+  "total_hours": 15,
+  "accolades": [10],
+  "confirmation_requested": false
+}
+```
+
+---
+
+### Request Hours Confirmation
+**POST** `/api/students/me/request-confirmation`
+
+Student requests confirmation of their hours from staff.
+
+**Authorization:** Student only
+
+**Response (200 OK):**
+```json
+{
+  "message": "Confirmation request sent",
+  "student": {
+    "id": 1,
+    "username": "alice",
+    "total_hours": 15,
+    "confirmation_requested": true
+  }
+}
+```
+
+**Example:**
+```bash
+curl -X POST http://localhost:5000/api/students/me/request-confirmation \
+  -H "Cookie: access_token=<your_token>"
+```
+
+---
+
+### Get Student Accolades
+**GET** `/api/students/<student_id>/accolades`
+
+Get accolades (milestone awards) for a student.
+
+**Authorization:**
+- Students can only view their own accolades
+- Staff can view any student's accolades
+
+**Response (200 OK):**
+```json
+{
+  "accolades": [10, 25, 50]
+}
+```
+
+**Accolade Milestones:**
+- 10 hours
+- 25 hours
+- 50 hours
+- 100 hours
+
+---
+
+### View Leaderboard
+**GET** `/api/leaderboard`
+
+Get the leaderboard of all students sorted by total hours (descending).
+
+**Authorization:** Any authenticated user
+
+**Response (200 OK):**
+```json
+[
+  {
+    "id": 2,
+    "username": "bob",
+    "name": "Bob",
+    "total_hours": 50,
+    "accolades": [10, 25, 50]
+  },
+  {
+    "id": 1,
+    "username": "alice",
+    "name": "Alice",
+    "total_hours": 25,
+    "accolades": [10, 25]
+  }
+]
+```
+
+---
+
+## Staff Endpoints
+
+### Get All Staff (Staff Only)
+**GET** `/api/staff`
+
+Retrieve a list of all staff members.
+
+**Authorization:** Staff only
+
+**Response (200 OK):**
+```json
+[
+  {
+    "id": 3,
+    "username": "staff1",
+    "name": "Staff One",
+    "user_type": "staff"
+  }
+]
+```
+
+---
+
+### Get Current Staff Profile
+**GET** `/api/staff/me`
+
+Get the profile of the currently logged-in staff member.
+
+**Authorization:** Staff only
+
+**Response (200 OK):**
+```json
+{
+  "id": 3,
+  "username": "staff1",
+  "name": "Staff One",
+  "user_type": "staff"
+}
+```
+
+---
+
+### Log Hours for Student
+**POST** `/api/staff/log-hours`
+
+Staff logs community service hours for a student.
+
+**Authorization:** Staff only
+
+**Request Body:**
+```json
+{
+  "student_id": 1,
+  "hours": 10
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "message": "Logged 10 hours for student",
+  "student": {
+    "id": 1,
+    "username": "alice",
+    "total_hours": 25,
+    "accolades": [10, 25]
+  }
+}
+```
+
+**Response (400 Bad Request):**
+```json
+{
+  "error": "student_id and hours are required"
+}
+```
+
+**Example:**
+```bash
+curl -X POST http://localhost:5000/api/staff/log-hours \
+  -H "Content-Type: application/json" \
+  -H "Cookie: access_token=<staff_token>" \
+  -d '{"student_id":1,"hours":10}'
+```
+
+---
+
+### Confirm Student Hours
+**POST** `/api/staff/confirm-hours`
+
+Staff confirms hours that a student has requested confirmation for.
+
+**Authorization:** Staff only
+
+**Request Body:**
+```json
+{
+  "student_id": 1
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "message": "Hours confirmation completed",
+  "student": {
+    "id": 1,
+    "username": "alice",
+    "confirmation_requested": false
+  }
+}
+```
+
+**Response (400 Bad Request):**
+```json
+{
+  "error": "No confirmation request from this student"
+}
+```
+
+---
+
+### Get Pending Confirmations
+**GET** `/api/staff/pending-confirmations`
+
+Get all students who have requested hours confirmation.
+
+**Authorization:** Staff only
+
+**Response (200 OK):**
+```json
+[
+  {
+    "id": 1,
+    "username": "alice",
+    "name": "Alice",
+    "total_hours": 25,
+    "confirmation_requested": true
+  }
+]
+```
+
+---
+
+## Testing the API
+
+### Run All Tests
+```bash
+pytest
+```
+
+### Run Specific Test Files
+```bash
+# Test authentication API
+pytest App/tests/test_auth_api.py -v
+
+# Test student and staff API
+pytest App/tests/test_student_staff_api.py -v
+
+# Test general app functionality
+pytest App/tests/test_app.py -v
+```
+
+### Test Coverage
+```bash
+# Generate coverage report
+coverage run -m pytest
+coverage report
+
+# Generate HTML coverage report
+coverage html
+```
+
+---
+
+## CLI Commands
+
+The application includes helpful CLI commands for managing data:
+
+### Create Students
+```bash
+flask student create alice password "Alice Student"
+flask student list
+flask student add-hours 1 10
+```
+
+### Create Staff
+```bash
+flask staff create staff1 password "Staff Member"
+flask staff list
+flask staff log-hours 3 1 5  # staff_id student_id hours
+flask staff pending
+```
+
+### View Leaderboard
+```bash
+flask system leaderboard
+```
+
+---
+
+## Error Responses
+
+The API uses standard HTTP status codes:
+
+- **200 OK**: Request succeeded
+- **400 Bad Request**: Invalid request data
+- **401 Unauthorized**: Missing or invalid JWT token
+- **403 Forbidden**: User doesn't have permission
+- **404 Not Found**: Resource not found
+- **500 Internal Server Error**: Server error
+
+All error responses include a JSON body with an `error` or `message` field:
+```json
+{
+  "error": "Description of the error"
+}
+```
+
+---
+
+## Notes for Instructors/Testers
+
+1. **Sample Data**: Run `flask init` to populate the database with test users
+2. **Authentication**: All API endpoints (except `/api/login`) require JWT authentication
+3. **Authorization**: Students and staff have different permissions - test both user types
+4. **Accolades**: Automatically awarded at 10, 25, 50, and 100 hour milestones
+5. **Testing**: Comprehensive test suite covers auth, student, and staff APIs (34 tests total)
