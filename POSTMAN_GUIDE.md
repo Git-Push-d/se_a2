@@ -38,7 +38,7 @@ Server will run on `http://localhost:5000`
 
 **Test as Student:**
 ```
-1. Login (Student) with username: alice, password: password
+1. Login (Student) with username: joe, password: 1234
 2. Get Current Student Profile → /api/students/me
 3. Request Hours Confirmation → /api/students/me/request-confirmation
 4. View Leaderboard → /api/leaderboard
@@ -46,13 +46,13 @@ Server will run on `http://localhost:5000`
 
 **Test as Staff:**
 ```
-1. Login (Staff) with username: staff1, password: password
+1. Login (Staff) with username: staff5, password: 5678
 2. Get All Students → /api/students
 3. Log Hours → /api/staff/log-hours
-   Body: {"student_id": 1, "hours": 10}
+   Body: {"student_id": 10, "hours": 10}
 4. Get Pending Confirmations → /api/staff/pending-confirmations
 5. Confirm Hours → /api/staff/confirm-hours
-   Body: {"student_id": 1}
+   Body: {"student_id": 10}
 ```
 
 ## Important Notes
@@ -69,15 +69,19 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGc...
 ```
 The Postman collection handles this automatically!
 
-### 📝 Sample Credentials
-**Students:**
-- alice / password
-- bob / password
-- charlie / password
+### 📝 Test Credentials
+**Student:**
+- joe / 1234
 
 **Staff:**
-- staff1 / password
-- staff2 / password
+- staff5 / 5678
+
+**Additional Test Users:**
+- alice / alice123 (student)
+- bob / bob123 (student)
+- charlie / charlie123 (student)
+- staff1 / staff123 (staff)
+- staff2 / staff456 (staff)
 
 ## Troubleshooting
 

@@ -47,7 +47,7 @@
                                                 ],
                                                 "body": {
                                                         "mode": "raw",
-                                                        "raw": "{\n  \"username\": \"alice\",\n  \"password\": \"alice123\",\n  \"role\": \"student\"\n}"
+                                                        "raw": "{\n  \"username\": \"joe\",\n  \"password\": \"1234\",\n  \"role\": \"student\"\n}"
                                                 },
                                                 "url": {
                                                         "raw": "{{baseUrl}}/api/login",
@@ -90,7 +90,7 @@
                                                 ],
                                                 "body": {
                                                         "mode": "raw",
-                                                        "raw": "{\n  \"username\": \"staff1\",\n  \"password\": \"staff123\",\n  \"role\": \"staff\"\n}"
+                                                        "raw": "{\n  \"username\": \"staff5\",\n  \"password\": \"5678\",\n  \"role\": \"staff\"\n}"
                                                 },
                                                 "url": {
                                                         "raw": "{{baseUrl}}/api/login",
