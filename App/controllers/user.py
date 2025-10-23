@@ -1,8 +1,12 @@
-from App.models import User
+from App.models import User, Student, Staff
 from App.database import db
 
-def create_user(username, password, name="User"):
-    newuser = User(username=username, password=password, name=name)
+def create_user(username, password, name="User", role="student"):
+    """Create a user with the specified role (student or staff)"""
+    if role == "staff":
+        newuser = Staff(username=username, password=password, name=name)
+    else:
+        newuser = Student(username=username, password=password, name=name)
     db.session.add(newuser)
     db.session.commit()
     return newuser
