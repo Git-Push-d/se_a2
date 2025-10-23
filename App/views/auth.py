@@ -53,9 +53,8 @@ def user_login_api():
   token = login(data['username'], data['password'])
   if not token:
     return jsonify(message='bad username or password given'), 401
-  response = jsonify(access_token=token) 
-  set_access_cookies(response, token)
-  return response
+  # Return token for Authorization header use (Postman, API clients)
+  return jsonify(access_token=token), 200
 
 @auth_views.route('/api/identify', methods=['GET'])
 @jwt_required()
@@ -64,6 +63,6 @@ def identify_user():
 
 @auth_views.route('/api/logout', methods=['GET'])
 def logout_api():
-    response = jsonify(message="Logged Out!")
-    unset_jwt_cookies(response)
-    return response
+    # For API clients using Authorization headers, logout is handled client-side
+    # by discarding the token
+    return jsonify(message="Logged Out!"), 200

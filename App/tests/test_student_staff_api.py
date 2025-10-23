@@ -16,6 +16,18 @@ from App.controllers import (
 LOGGER = logging.getLogger(__name__)
 
 
+def get_auth_headers(client, username, password):
+    """Helper function to login and get Authorization header"""
+    response = client.post('/api/login',
+        data=json.dumps({'username': username, 'password': password}),
+        content_type='application/json'
+    )
+    if response.status_code == 200:
+        token = response.json['access_token']
+        return {'Authorization': f'Bearer {token}'}
+    return {}
+
+
 '''
    Unit Tests
 '''
@@ -75,14 +87,11 @@ class StudentAPIIntegrationTests(unittest.TestCase):
         app = create_app({'TESTING': True, 'SQLALCHEMY_DATABASE_URI': 'sqlite:///test.db'})
         client = app.test_client()
         
-        # Login as staff
-        login_response = client.post('/api/login',
-            data=json.dumps({'username': 'stafftest1', 'password': 'password'}),
-            content_type='application/json'
-        )
+        # Login as staff and get auth headers
+        headers = get_auth_headers(client, 'stafftest1', 'password')
         
         # Get all students
-        response = client.get('/api/students')
+        response = client.get('/api/students', headers=headers)
         
         assert response.status_code == 200
         students = response.json
@@ -97,13 +106,10 @@ class StudentAPIIntegrationTests(unittest.TestCase):
         client = app.test_client()
         
         # Login as student
-        login_response = client.post('/api/login',
-            data=json.dumps({'username': 'studenttest2', 'password': 'password'}),
-            content_type='application/json'
-        )
-        
+        headers = get_auth_headers(client, 'studenttest2', 'password')
         # Try to get all students (should be forbidden)
-        response = client.get('/api/students')
+
+        response = client.get('/api/students', headers=headers)
         
         assert response.status_code == 403
 
@@ -115,13 +121,10 @@ class StudentAPIIntegrationTests(unittest.TestCase):
         client = app.test_client()
         
         # Login as the student
-        login_response = client.post('/api/login',
-            data=json.dumps({'username': 'studenttest3', 'password': 'password'}),
-            content_type='application/json'
-        )
-        
+        headers = get_auth_headers(client, 'studenttest3', 'password')
         # Get student by ID
-        response = client.get(f'/api/students/{student.id}')
+
+        response = client.get(f'/api/students/{student.id}', headers=headers)
         
         assert response.status_code == 200
         data = response.json
@@ -137,13 +140,10 @@ class StudentAPIIntegrationTests(unittest.TestCase):
         client = app.test_client()
         
         # Login as student1
-        login_response = client.post('/api/login',
-            data=json.dumps({'username': 'studenttest4', 'password': 'password'}),
-            content_type='application/json'
-        )
-        
+        headers = get_auth_headers(client, 'studenttest4', 'password')
         # Try to get student2's details
-        response = client.get(f'/api/students/{student2.id}')
+
+        response = client.get(f'/api/students/{student2.id}', headers=headers)
         
         assert response.status_code == 403
 
@@ -155,13 +155,10 @@ class StudentAPIIntegrationTests(unittest.TestCase):
         client = app.test_client()
         
         # Login as student
-        login_response = client.post('/api/login',
-            data=json.dumps({'username': 'studenttest6', 'password': 'password'}),
-            content_type='application/json'
-        )
-        
+        headers = get_auth_headers(client, 'studenttest6', 'password')
         # Get current student profile
-        response = client.get('/api/students/me')
+
+        response = client.get('/api/students/me', headers=headers)
         
         assert response.status_code == 200
         data = response.json
@@ -175,13 +172,10 @@ class StudentAPIIntegrationTests(unittest.TestCase):
         client = app.test_client()
         
         # Login as student
-        login_response = client.post('/api/login',
-            data=json.dumps({'username': 'studenttest7', 'password': 'password'}),
-            content_type='application/json'
-        )
-        
+        headers = get_auth_headers(client, 'studenttest7', 'password')
         # Request confirmation
-        response = client.post('/api/students/me/request-confirmation')
+
+        response = client.post('/api/students/me/request-confirmation', headers=headers)
         
         assert response.status_code == 200
         data = response.json
@@ -198,13 +192,10 @@ class StudentAPIIntegrationTests(unittest.TestCase):
         client = app.test_client()
         
         # Login as student
-        login_response = client.post('/api/login',
-            data=json.dumps({'username': 'studenttest8', 'password': 'password'}),
-            content_type='application/json'
-        )
-        
+        headers = get_auth_headers(client, 'studenttest8', 'password')
         # Get accolades
-        response = client.get(f'/api/students/{student.id}/accolades')
+
+        response = client.get(f'/api/students/{student.id}/accolades', headers=headers)
         
         assert response.status_code == 200
         data = response.json
@@ -222,13 +213,10 @@ class StudentAPIIntegrationTests(unittest.TestCase):
         client = app.test_client()
         
         # Login as student
-        login_response = client.post('/api/login',
-            data=json.dumps({'username': 'studenttest9', 'password': 'password'}),
-            content_type='application/json'
-        )
-        
+        headers = get_auth_headers(client, 'studenttest9', 'password')
         # Get leaderboard
-        response = client.get('/api/leaderboard')
+
+        response = client.get('/api/leaderboard', headers=headers)
         
         assert response.status_code == 200
         leaderboard = response.json
@@ -261,13 +249,10 @@ class StaffAPIIntegrationTests(unittest.TestCase):
         client = app.test_client()
         
         # Login as staff
-        login_response = client.post('/api/login',
-            data=json.dumps({'username': 'stafftest2', 'password': 'password'}),
-            content_type='application/json'
-        )
-        
+        headers = get_auth_headers(client, 'stafftest2', 'password')
         # Get all staff
-        response = client.get('/api/staff')
+
+        response = client.get('/api/staff', headers=headers)
         
         assert response.status_code == 200
         staff_list = response.json
@@ -281,13 +266,10 @@ class StaffAPIIntegrationTests(unittest.TestCase):
         client = app.test_client()
         
         # Login as student
-        login_response = client.post('/api/login',
-            data=json.dumps({'username': 'studenttest11', 'password': 'password'}),
-            content_type='application/json'
-        )
-        
+        headers = get_auth_headers(client, 'studenttest11', 'password')
         # Try to get all staff (should be forbidden)
-        response = client.get('/api/staff')
+
+        response = client.get('/api/staff', headers=headers)
         
         assert response.status_code == 403
 
@@ -299,13 +281,10 @@ class StaffAPIIntegrationTests(unittest.TestCase):
         client = app.test_client()
         
         # Login as staff
-        login_response = client.post('/api/login',
-            data=json.dumps({'username': 'stafftest3', 'password': 'password'}),
-            content_type='application/json'
-        )
-        
+        headers = get_auth_headers(client, 'stafftest3', 'password')
         # Get current staff profile
-        response = client.get('/api/staff/me')
+
+        response = client.get('/api/staff/me', headers=headers)
         
         assert response.status_code == 200
         data = response.json
@@ -320,14 +299,12 @@ class StaffAPIIntegrationTests(unittest.TestCase):
         client = app.test_client()
         
         # Login as staff
-        login_response = client.post('/api/login',
-            data=json.dumps({'username': 'stafftest4', 'password': 'password'}),
-            content_type='application/json'
-        )
-        
+        headers = get_auth_headers(client, 'stafftest4', 'password')
         # Log hours for student
+
         response = client.post('/api/staff/log-hours',
             data=json.dumps({'student_id': student.id, 'hours': 10}),
+            headers=headers,
             content_type='application/json'
         )
         
@@ -344,14 +321,12 @@ class StaffAPIIntegrationTests(unittest.TestCase):
         client = app.test_client()
         
         # Login as student
-        login_response = client.post('/api/login',
-            data=json.dumps({'username': 'studenttest13', 'password': 'password'}),
-            content_type='application/json'
-        )
-        
+        headers = get_auth_headers(client, 'studenttest13', 'password')
         # Try to log hours (should be forbidden)
+
         response = client.post('/api/staff/log-hours',
             data=json.dumps({'student_id': 1, 'hours': 10}),
+            headers=headers,
             content_type='application/json'
         )
         
@@ -366,21 +341,16 @@ class StaffAPIIntegrationTests(unittest.TestCase):
         client = app.test_client()
         
         # Login as student and request confirmation
-        client.post('/api/login',
-            data=json.dumps({'username': 'studenttest14', 'password': 'password'}),
-            content_type='application/json'
-        )
-        client.post('/api/students/me/request-confirmation')
+        student_headers = get_auth_headers(client, 'studenttest14', 'password')
+        client.post('/api/students/me/request-confirmation', headers=student_headers)
         
         # Login as staff
-        client.post('/api/login',
-            data=json.dumps({'username': 'stafftest5', 'password': 'password'}),
-            content_type='application/json'
-        )
+        staff_headers = get_auth_headers(client, 'stafftest5', 'password')
         
         # Confirm hours
         response = client.post('/api/staff/confirm-hours',
             data=json.dumps({'student_id': student.id}),
+            headers=staff_headers,
             content_type='application/json'
         )
         
@@ -398,20 +368,14 @@ class StaffAPIIntegrationTests(unittest.TestCase):
         client = app.test_client()
         
         # Login as student and request confirmation
-        client.post('/api/login',
-            data=json.dumps({'username': 'studenttest15', 'password': 'password'}),
-            content_type='application/json'
-        )
-        client.post('/api/students/me/request-confirmation')
+        student_headers = get_auth_headers(client, 'studenttest15', 'password')
+        client.post('/api/students/me/request-confirmation', headers=student_headers)
         
         # Login as staff
-        client.post('/api/login',
-            data=json.dumps({'username': 'stafftest6', 'password': 'password'}),
-            content_type='application/json'
-        )
+        staff_headers = get_auth_headers(client, 'stafftest6', 'password')
         
         # Get pending confirmations
-        response = client.get('/api/staff/pending-confirmations')
+        response = client.get('/api/staff/pending-confirmations', headers=staff_headers)
         
         assert response.status_code == 200
         pending = response.json
@@ -428,14 +392,12 @@ class StaffAPIIntegrationTests(unittest.TestCase):
         client = app.test_client()
         
         # Login as staff
-        client.post('/api/login',
-            data=json.dumps({'username': 'stafftest7', 'password': 'password'}),
-            content_type='application/json'
-        )
+        headers = get_auth_headers(client, 'stafftest7', 'password')
         
         # Try to log hours without student_id
         response = client.post('/api/staff/log-hours',
             data=json.dumps({'hours': 10}),
+            headers=headers,
             content_type='application/json'
         )
         
@@ -444,6 +406,7 @@ class StaffAPIIntegrationTests(unittest.TestCase):
         # Try to log hours with invalid student_id
         response = client.post('/api/staff/log-hours',
             data=json.dumps({'student_id': 99999, 'hours': 10}),
+            headers=headers,
             content_type='application/json'
         )
         
@@ -458,25 +421,20 @@ class StaffAPIIntegrationTests(unittest.TestCase):
         client = app.test_client()
         
         # Login as staff
-        client.post('/api/login',
-            data=json.dumps({'username': 'stafftest8', 'password': 'password'}),
-            content_type='application/json'
-        )
+        staff_headers = get_auth_headers(client, 'stafftest8', 'password')
         
         # Log 25 hours for student
         client.post('/api/staff/log-hours',
             data=json.dumps({'student_id': student.id, 'hours': 25}),
+            headers=staff_headers,
             content_type='application/json'
         )
         
         # Login as student to check accolades
-        client.post('/api/login',
-            data=json.dumps({'username': 'studenttest16', 'password': 'password'}),
-            content_type='application/json'
-        )
+        student_headers = get_auth_headers(client, 'studenttest16', 'password')
         
         # Get accolades
-        response = client.get(f'/api/students/{student.id}/accolades')
+        response = client.get(f'/api/students/{student.id}/accolades', headers=student_headers)
         
         assert response.status_code == 200
         data = response.json

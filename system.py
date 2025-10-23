@@ -78,3 +78,12 @@ class CommunityServiceTracker:
                 return staff
 
         return None  # No match found
+
+    def get_user_by_username(self, username):
+        for user in self.students + self.staff:
+            if user.name == username:
+                return user
+        return None
+
+    def get_leaderboard(self):
+        return [{"name": s.name, "hours": s.hours} for s in sorted(self.students, key=lambda x: x.hours, reverse=True)]

@@ -124,9 +124,12 @@ class AuthAPIIntegrationTests(unittest.TestCase):
         )
         
         assert login_response.status_code == 200
+        token = login_response.json['access_token']
         
-        # Use token to identify
-        identify_response = client.get('/api/identify')
+        # Use token to identify with Authorization header
+        identify_response = client.get('/api/identify',
+            headers={'Authorization': f'Bearer {token}'}
+        )
         
         assert identify_response.status_code == 200
         data = identify_response.json
@@ -225,13 +228,18 @@ class AuthAPIIntegrationTests(unittest.TestCase):
         )
         
         assert login_response.status_code == 200
+        token = login_response.json['access_token']
         
-        # First identify request
-        identify1 = client.get('/api/identify')
+        # First identify request with Authorization header
+        identify1 = client.get('/api/identify',
+            headers={'Authorization': f'Bearer {token}'}
+        )
         assert identify1.status_code == 200
         
         # Second identify request (token should still work)
-        identify2 = client.get('/api/identify')
+        identify2 = client.get('/api/identify',
+            headers={'Authorization': f'Bearer {token}'}
+        )
         assert identify2.status_code == 200
         
         # Both should return the same user info

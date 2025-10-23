@@ -253,6 +253,14 @@ This creates sample users:
 ### 3. Test the API
 You can use curl, Postman, or any HTTP client to test the endpoints.
 
+**Using Postman:**
+1. Import the `CommunityTracker_Postman_Collection.json` file into Postman
+2. The collection automatically saves the JWT token when you login
+3. All protected endpoints will use the saved token in the Authorization header
+
+**Using cURL:**
+See the examples below for each endpoint.
+
 ---
 
 ## Authentication Endpoints
@@ -718,10 +726,29 @@ All error responses include a JSON body with an `error` or `message` field:
 
 ---
 
+## Using Postman
+
+A Postman collection is included: `CommunityTracker_Postman_Collection.json`
+
+**How to use:**
+1. Import the collection into Postman
+2. Ensure the server is running on `http://localhost:5000`
+3. Start with the **Login (Student)** or **Login (Staff)** request to get a JWT token
+4. The token is automatically saved and used for all subsequent requests
+5. Test any endpoint - the Authorization header is automatically included
+
+**Testing Workflow:**
+1. Login as student (alice/password) → Test student endpoints
+2. Login as staff (staff1/password) → Test staff endpoints like logging hours
+3. Login as student again → View updated hours and accolades
+
+---
+
 ## Notes for Instructors/Testers
 
 1. **Sample Data**: Run `flask init` to populate the database with test users
-2. **Authentication**: All API endpoints (except `/api/login`) require JWT authentication
+2. **Authentication**: All API endpoints (except `/api/login`) require JWT authentication via `Authorization: Bearer <token>` header
 3. **Authorization**: Students and staff have different permissions - test both user types
 4. **Accolades**: Automatically awarded at 10, 25, 50, and 100 hour milestones
 5. **Testing**: Comprehensive test suite covers auth, student, and staff APIs (34 tests total)
+6. **Postman**: Import the included `CommunityTracker_Postman_Collection.json` for easy API testing
