@@ -392,7 +392,7 @@
                                                 ],
                                                 "body": {
                                                         "mode": "raw",
-                                                        "raw": "{\n  \"student_id\": 1,\n  \"hours\": 10\n}"
+                                                        "raw": "{\n  \"student_id\": 10,\n  \"hours\": 10\n}"
                                                 },
                                                 "url": {
                                                         "raw": "{{baseUrl}}/api/staff/log-hours",
@@ -426,7 +426,7 @@
                                                 ],
                                                 "body": {
                                                         "mode": "raw",
-                                                        "raw": "{\n  \"student_id\": 1\n}"
+                                                        "raw": "{\n  \"student_id\": 10\n}"
                                                 },
                                                 "url": {
                                                         "raw": "{{baseUrl}}/api/staff/confirm-hours",
