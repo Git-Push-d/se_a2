@@ -27,10 +27,11 @@ def identify_page():
 @auth_views.route('/login', methods=['POST'])
 def login_action():
     data = request.form
-    token = login(data['username'], data['password'])
+    role = data.get('role')
+    token = login(data['username'], data['password'], role)
     response = redirect(request.referrer)
     if not token:
-        flash('Bad username or password given'), 401
+        flash('Bad username, password, or role given'), 401
     else:
         flash('Login Successful')
         set_access_cookies(response, token) 
@@ -50,9 +51,10 @@ API Routes
 @auth_views.route('/api/login', methods=['POST'])
 def user_login_api():
   data = request.json
-  token = login(data['username'], data['password'])
+  role = data.get('role')
+  token = login(data['username'], data['password'], role)
   if not token:
-    return jsonify(message='bad username or password given'), 401
+    return jsonify(message='bad username, password, or role given'), 401
   # Return token for Authorization header use (Postman, API clients)
   return jsonify(access_token=token), 200
 

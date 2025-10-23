@@ -39,6 +39,16 @@
                       <input placeholder="password"value="bobpass" name="password" type="password" class="validate" required>
                       <label for="password">Password</label>
                   </div>
+                  <div style="margin-right: 10px; display: flex; gap: 15px;">
+                      <label style="color: white;">
+                          <input name="role" type="radio" value="student" checked />
+                          <span>Student</span>
+                      </label>
+                      <label style="color: white;">
+                          <input name="role" type="radio" value="staff" />
+                          <span>Staff</span>
+                      </label>
+                  </div>
                   <button type="submit" class="btn waves-effect waves-light">Login</button>
               </form>
               {% endif %}

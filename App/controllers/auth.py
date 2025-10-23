@@ -3,10 +3,13 @@ from flask_jwt_extended import create_access_token, jwt_required, JWTManager, ge
 from App.models import User
 from App.database import db
 
-def login(username, password):
+def login(username, password, role=None):
   result = db.session.execute(db.select(User).filter_by(username=username))
   user = result.scalar_one_or_none()
   if user and user.check_password(password):
+    # If role is specified, verify user has the correct role
+    if role and user.user_type != role:
+      return None
     # Store ONLY the user id as a string in JWT 'sub'
     return create_access_token(identity=str(user.id))
   return None
