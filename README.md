@@ -247,8 +247,12 @@ python3 run.py
 flask init
 ```
 This creates sample users:
-- Students: `alice`, `bob`, `charlie` (password: `password`)
-- Staff: `staff1`, `staff2` (password: `password`)
+- **Students:** `alice`, `bob`, `charlie` (password: various), **joe** (password: `1234`)
+- **Staff:** `staff1`, `staff2` (password: various), **staff5** (password: `5678`)
+
+**Recommended Test Credentials:**
+- Student: `joe` / `1234`
+- Staff: `staff5` / `5678`
 
 ### 3. Test the API
 You can use curl, Postman, or any HTTP client to test the endpoints.
@@ -268,13 +272,14 @@ See the examples below for each endpoint.
 ### Login
 **POST** `/api/login`
 
-Authenticate a user and receive a JWT token.
+Authenticate a user and receive a JWT token. **Role selection is required.**
 
 **Request Body:**
 ```json
 {
-  "username": "alice",
-  "password": "password"
+  "username": "joe",
+  "password": "1234",
+  "role": "Student"
 }
 ```
 
@@ -288,7 +293,7 @@ Authenticate a user and receive a JWT token.
 **Response (401 Unauthorized):**
 ```json
 {
-  "message": "bad username or password given"
+  "message": "bad username, password, or role given"
 }
 ```
 
@@ -296,7 +301,7 @@ Authenticate a user and receive a JWT token.
 ```bash
 curl -X POST http://localhost:5000/api/login \
   -H "Content-Type: application/json" \
-  -d '{"username":"alice","password":"password"}'
+  -d '{"username":"joe","password":"1234","role":"Student"}'
 ```
 
 ---
@@ -658,11 +663,14 @@ pytest
 
 ### Run Specific Test Files
 ```bash
-# Test authentication API
+# Test authentication API (13 tests)
 pytest App/tests/test_auth_api.py -v
 
-# Test student and staff API
-pytest App/tests/test_student_staff_api.py -v
+# Test student API (11 tests)
+pytest App/tests/test_student_api.py -v
+
+# Test staff API (10 tests)
+pytest App/tests/test_staff_api.py -v
 
 # Test general app functionality
 pytest App/tests/test_app.py -v
@@ -738,9 +746,11 @@ A Postman collection is included: `CommunityTracker_Postman_Collection.json`
 5. Test any endpoint - the Authorization header is automatically included
 
 **Testing Workflow:**
-1. Login as student (alice/password) → Test student endpoints
-2. Login as staff (staff1/password) → Test staff endpoints like logging hours
+1. Login as student (joe/1234) with role="Student" → Test student endpoints
+2. Login as staff (staff5/5678) with role="Staff" → Test staff endpoints like logging hours
 3. Login as student again → View updated hours and accolades
+
+**See TESTING_STEPS.md for detailed step-by-step testing guide**
 
 ---
 
@@ -748,7 +758,32 @@ A Postman collection is included: `CommunityTracker_Postman_Collection.json`
 
 1. **Sample Data**: Run `flask init` to populate the database with test users
 2. **Authentication**: All API endpoints (except `/api/login`) require JWT authentication via `Authorization: Bearer <token>` header
-3. **Authorization**: Students and staff have different permissions - test both user types
-4. **Accolades**: Automatically awarded at 10, 25, 50, and 100 hour milestones
-5. **Testing**: Comprehensive test suite covers auth, student, and staff APIs (34 tests total)
-6. **Postman**: Import the included `CommunityTracker_Postman_Collection.json` for easy API testing
+3. **Role Selection**: Login requires role ("Student" or "Staff") - users must login with matching role
+4. **Authorization**: Students and staff have different permissions - test both user types
+5. **Accolades**: Automatically awarded at 10, 25, 50, and 100 hour milestones
+6. **Testing**: Comprehensive test suite covers auth, student, and staff APIs (34 tests total)
+7. **Postman**: Import the included `CommunityTracker_Postman_Collection.json` for easy API testing
+8. **Documentation**: 
+   - `TESTING_STEPS.md` - Step-by-step Postman testing guide
+   - `UNIT_TEST_PLAN.md` - Complete unit test documentation
+   - `POSTMAN_GUIDE.md` - Postman setup and usage guide
+
+## Test Credentials
+
+**Preferred for Testing:**
+- **Student:** joe / 1234
+- **Staff:** staff5 / 5678
+
+**Additional Users:**
+- alice / alice123 (student)
+- bob / bob123 (student)
+- charlie / charlie123 (student)
+- staff1 / staff123 (staff)
+
+## Test Statistics
+
+- **Total Tests:** 34
+- **Authentication Tests:** 13
+- **Student API Tests:** 11
+- **Staff API Tests:** 10
+- **All Tests Passing:** ✅
