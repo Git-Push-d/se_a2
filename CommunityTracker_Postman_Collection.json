@@ -1,476 +1,400 @@
 {
-        "info": {
-                "name": "Community Service Tracker API",
-                "description": "API collection for testing the Community Service Tracker application",
-                "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-        },
-        "variable": [
-                {
-                        "key": "baseUrl",
-                        "value": "https://d24a26da-63db-464d-96ac-951480fa3664-00-1cqqh4m9zlw5.riker.replit.dev",
-                        "type": "string"
-                },
-                {
-                        "key": "token",
-                        "value": "",
-                        "type": "string"
-                }
-        ],
-        "item": [
-                {
-                        "name": "Authentication",
-                        "item": [
-                                {
-                                        "name": "Login (Student)",
-                                        "event": [
-                                                {
-                                                        "listen": "test",
-                                                        "script": {
-                                                                "exec": [
-                                                                        "if (pm.response.code === 200) {",
-                                                                        "    var jsonData = pm.response.json();",
-                                                                        "    pm.collectionVariables.set(\"token\", jsonData.access_token);",
-                                                                        "    pm.environment.set(\"token\", jsonData.access_token);",
-                                                                        "}"
-                                                                ],
-                                                                "type": "text/javascript"
-                                                        }
-                                                }
-                                        ],
-                                        "request": {
-                                                "method": "POST",
-                                                "header": [
-                                                        {
-                                                                "key": "Content-Type",
-                                                                "value": "application/json"
-                                                        }
-                                                ],
-                                                "body": {
-                                                        "mode": "raw",
-                                                        "raw": "{\n  \"username\": \"joe\",\n  \"password\": \"1234\",\n  \"role\": \"student\"\n}"
-                                                },
-                                                "url": {
-                                                        "raw": "{{baseUrl}}/api/login",
-                                                        "host": [
-                                                                "{{baseUrl}}"
-                                                        ],
-                                                        "path": [
-                                                                "api",
-                                                                "login"
-                                                        ]
-                                                },
-                                                "description": "Login as a student user (alice) and save the JWT token"
-                                        },
-                                        "response": []
-                                },
-                                {
-                                        "name": "Login (Staff)",
-                                        "event": [
-                                                {
-                                                        "listen": "test",
-                                                        "script": {
-                                                                "exec": [
-                                                                        "if (pm.response.code === 200) {",
-                                                                        "    var jsonData = pm.response.json();",
-                                                                        "    pm.collectionVariables.set(\"token\", jsonData.access_token);",
-                                                                        "    pm.environment.set(\"token\", jsonData.access_token);",
-                                                                        "}"
-                                                                ],
-                                                                "type": "text/javascript"
-                                                        }
-                                                }
-                                        ],
-                                        "request": {
-                                                "method": "POST",
-                                                "header": [
-                                                        {
-                                                                "key": "Content-Type",
-                                                                "value": "application/json"
-                                                        }
-                                                ],
-                                                "body": {
-                                                        "mode": "raw",
-                                                        "raw": "{\n  \"username\": \"staff5\",\n  \"password\": \"5678\",\n  \"role\": \"staff\"\n}"
-                                                },
-                                                "url": {
-                                                        "raw": "{{baseUrl}}/api/login",
-                                                        "host": [
-                                                                "{{baseUrl}}"
-                                                        ],
-                                                        "path": [
-                                                                "api",
-                                                                "login"
-                                                        ]
-                                                },
-                                                "description": "Login as a staff user (staff1) and save the JWT token"
-                                        },
-                                        "response": []
-                                },
-                                {
-                                        "name": "Identify Current User",
-                                        "request": {
-                                                "method": "GET",
-                                                "header": [
-                                                        {
-                                                                "key": "Authorization",
-                                                                "value": "Bearer {{token}}",
-                                                                "type": "text"
-                                                        }
-                                                ],
-                                                "url": {
-                                                        "raw": "{{baseUrl}}/api/identify",
-                                                        "host": [
-                                                                "{{baseUrl}}"
-                                                        ],
-                                                        "path": [
-                                                                "api",
-                                                                "identify"
-                                                        ]
-                                                },
-                                                "description": "Get information about the currently authenticated user"
-                                        },
-                                        "response": []
-                                },
-                                {
-                                        "name": "Logout",
-                                        "request": {
-                                                "method": "GET",
-                                                "header": [
-                                                        {
-                                                                "key": "Authorization",
-                                                                "value": "Bearer {{token}}",
-                                                                "type": "text"
-                                                        }
-                                                ],
-                                                "url": {
-                                                        "raw": "{{baseUrl}}/api/logout",
-                                                        "host": [
-                                                                "{{baseUrl}}"
-                                                        ],
-                                                        "path": [
-                                                                "api",
-                                                                "logout"
-                                                        ]
-                                                },
-                                                "description": "Logout (client-side, discard the token)"
-                                        },
-                                        "response": []
-                                }
-                        ],
-                        "description": "Authentication endpoints for login and user identification"
-                },
-                {
-                        "name": "Student Endpoints",
-                        "item": [
-                                {
-                                        "name": "Get All Students (Staff Only)",
-                                        "request": {
-                                                "method": "GET",
-                                                "header": [
-                                                        {
-                                                                "key": "Authorization",
-                                                                "value": "Bearer {{token}}",
-                                                                "type": "text"
-                                                        }
-                                                ],
-                                                "url": {
-                                                        "raw": "{{baseUrl}}/api/students",
-                                                        "host": [
-                                                                "{{baseUrl}}"
-                                                        ],
-                                                        "path": [
-                                                                "api",
-                                                                "students"
-                                                        ]
-                                                },
-                                                "description": "Get list of all students (staff only)"
-                                        },
-                                        "response": []
-                                },
-                                {
-                                        "name": "Get Student by ID",
-                                        "request": {
-                                                "method": "GET",
-                                                "header": [
-                                                        {
-                                                                "key": "Authorization",
-                                                                "value": "Bearer {{token}}",
-                                                                "type": "text"
-                                                        }
-                                                ],
-                                                "url": {
-                                                        "raw": "{{baseUrl}}/api/students/1",
-                                                        "host": [
-                                                                "{{baseUrl}}"
-                                                        ],
-                                                        "path": [
-                                                                "api",
-                                                                "students",
-                                                                "1"
-                                                        ]
-                                                },
-                                                "description": "Get details of a specific student by ID"
-                                        },
-                                        "response": []
-                                },
-                                {
-                                        "name": "Get Current Student Profile",
-                                        "request": {
-                                                "method": "GET",
-                                                "header": [
-                                                        {
-                                                                "key": "Authorization",
-                                                                "value": "Bearer {{token}}",
-                                                                "type": "text"
-                                                        }
-                                                ],
-                                                "url": {
-                                                        "raw": "{{baseUrl}}/api/students/me",
-                                                        "host": [
-                                                                "{{baseUrl}}"
-                                                        ],
-                                                        "path": [
-                                                                "api",
-                                                                "students",
-                                                                "me"
-                                                        ]
-                                                },
-                                                "description": "Get profile of currently logged-in student"
-                                        },
-                                        "response": []
-                                },
-                                {
-                                        "name": "Request Hours Confirmation",
-                                        "request": {
-                                                "method": "POST",
-                                                "header": [
-                                                        {
-                                                                "key": "Authorization",
-                                                                "value": "Bearer {{token}}",
-                                                                "type": "text"
-                                                        }
-                                                ],
-                                                "url": {
-                                                        "raw": "{{baseUrl}}/api/students/me/request-confirmation",
-                                                        "host": [
-                                                                "{{baseUrl}}"
-                                                        ],
-                                                        "path": [
-                                                                "api",
-                                                                "students",
-                                                                "me",
-                                                                "request-confirmation"
-                                                        ]
-                                                },
-                                                "description": "Student requests confirmation of their hours from staff"
-                                        },
-                                        "response": []
-                                },
-                                {
-                                        "name": "Get Student Accolades",
-                                        "request": {
-                                                "method": "GET",
-                                                "header": [
-                                                        {
-                                                                "key": "Authorization",
-                                                                "value": "Bearer {{token}}",
-                                                                "type": "text"
-                                                        }
-                                                ],
-                                                "url": {
-                                                        "raw": "{{baseUrl}}/api/students/1/accolades",
-                                                        "host": [
-                                                                "{{baseUrl}}"
-                                                        ],
-                                                        "path": [
-                                                                "api",
-                                                                "students",
-                                                                "1",
-                                                                "accolades"
-                                                        ]
-                                                },
-                                                "description": "Get accolades (milestone awards) for a student"
-                                        },
-                                        "response": []
-                                },
-                                {
-                                        "name": "View Leaderboard",
-                                        "request": {
-                                                "method": "GET",
-                                                "header": [
-                                                        {
-                                                                "key": "Authorization",
-                                                                "value": "Bearer {{token}}",
-                                                                "type": "text"
-                                                        }
-                                                ],
-                                                "url": {
-                                                        "raw": "{{baseUrl}}/api/leaderboard",
-                                                        "host": [
-                                                                "{{baseUrl}}"
-                                                        ],
-                                                        "path": [
-                                                                "api",
-                                                                "leaderboard"
-                                                        ]
-                                                },
-                                                "description": "Get leaderboard of all students sorted by hours"
-                                        },
-                                        "response": []
-                                }
-                        ],
-                        "description": "Student-related endpoints"
-                },
-                {
-                        "name": "Staff Endpoints",
-                        "item": [
-                                {
-                                        "name": "Get All Staff (Staff Only)",
-                                        "request": {
-                                                "method": "GET",
-                                                "header": [
-                                                        {
-                                                                "key": "Authorization",
-                                                                "value": "Bearer {{token}}",
-                                                                "type": "text"
-                                                        }
-                                                ],
-                                                "url": {
-                                                        "raw": "{{baseUrl}}/api/staff",
-                                                        "host": [
-                                                                "{{baseUrl}}"
-                                                        ],
-                                                        "path": [
-                                                                "api",
-                                                                "staff"
-                                                        ]
-                                                },
-                                                "description": "Get list of all staff members (staff only)"
-                                        },
-                                        "response": []
-                                },
-                                {
-                                        "name": "Get Current Staff Profile",
-                                        "request": {
-                                                "method": "GET",
-                                                "header": [
-                                                        {
-                                                                "key": "Authorization",
-                                                                "value": "Bearer {{token}}",
-                                                                "type": "text"
-                                                        }
-                                                ],
-                                                "url": {
-                                                        "raw": "{{baseUrl}}/api/staff/me",
-                                                        "host": [
-                                                                "{{baseUrl}}"
-                                                        ],
-                                                        "path": [
-                                                                "api",
-                                                                "staff",
-                                                                "me"
-                                                        ]
-                                                },
-                                                "description": "Get profile of currently logged-in staff member"
-                                        },
-                                        "response": []
-                                },
-                                {
-                                        "name": "Log Hours for Student",
-                                        "request": {
-                                                "method": "POST",
-                                                "header": [
-                                                        {
-                                                                "key": "Authorization",
-                                                                "value": "Bearer {{token}}",
-                                                                "type": "text"
-                                                        },
-                                                        {
-                                                                "key": "Content-Type",
-                                                                "value": "application/json"
-                                                        }
-                                                ],
-                                                "body": {
-                                                        "mode": "raw",
-                                                        "raw": "{\n  \"student_id\": 10,\n  \"hours\": 10\n}"
-                                                },
-                                                "url": {
-                                                        "raw": "{{baseUrl}}/api/staff/log-hours",
-                                                        "host": [
-                                                                "{{baseUrl}}"
-                                                        ],
-                                                        "path": [
-                                                                "api",
-                                                                "staff",
-                                                                "log-hours"
-                                                        ]
-                                                },
-                                                "description": "Staff logs community service hours for a student"
-                                        },
-                                        "response": []
-                                },
-                                {
-                                        "name": "Confirm Student Hours",
-                                        "request": {
-                                                "method": "POST",
-                                                "header": [
-                                                        {
-                                                                "key": "Authorization",
-                                                                "value": "Bearer {{token}}",
-                                                                "type": "text"
-                                                        },
-                                                        {
-                                                                "key": "Content-Type",
-                                                                "value": "application/json"
-                                                        }
-                                                ],
-                                                "body": {
-                                                        "mode": "raw",
-                                                        "raw": "{\n  \"student_id\": 10\n}"
-                                                },
-                                                "url": {
-                                                        "raw": "{{baseUrl}}/api/staff/confirm-hours",
-                                                        "host": [
-                                                                "{{baseUrl}}"
-                                                        ],
-                                                        "path": [
-                                                                "api",
-                                                                "staff",
-                                                                "confirm-hours"
-                                                        ]
-                                                },
-                                                "description": "Staff confirms hours that a student requested confirmation for"
-                                        },
-                                        "response": []
-                                },
-                                {
-                                        "name": "Get Pending Confirmations",
-                                        "request": {
-                                                "method": "GET",
-                                                "header": [
-                                                        {
-                                                                "key": "Authorization",
-                                                                "value": "Bearer {{token}}",
-                                                                "type": "text"
-                                                        }
-                                                ],
-                                                "url": {
-                                                        "raw": "{{baseUrl}}/api/staff/pending-confirmations",
-                                                        "host": [
-                                                                "{{baseUrl}}"
-                                                        ],
-                                                        "path": [
-                                                                "api",
-                                                                "staff",
-                                                                "pending-confirmations"
-                                                        ]
-                                                },
-                                                "description": "Get all students who have requested hours confirmation"
-                                        },
-                                        "response": []
-                                }
-                        ],
-                        "description": "Staff-related endpoints"
-                }
-        ]
+	"info": {
+		"name": "Community Service Tracker API",
+		"description": "API collection for testing the Community Service Tracker application",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://d24a26da-63db-464d-96ac-951480fa3664-00-1cqqh4m9zlw5.riker.replit.dev",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1. Student Tests",
+			"item": [
+				{
+					"name": "Login (Student)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"token\", jsonData.access_token);",
+									"    pm.environment.set(\"token\", jsonData.access_token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"joe\",\n  \"password\": \"1234\",\n  \"role\": \"Student\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						},
+						"description": "Login as student user (joe) with role Student"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current Student Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/students/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"me"
+							]
+						},
+						"description": "Get profile of currently logged-in student"
+					},
+					"response": []
+				},
+				{
+					"name": "Request Hours Confirmation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/students/me/request-confirmation",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"me",
+								"request-confirmation"
+							]
+						},
+						"description": "Student requests confirmation of their hours from staff"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Student Accolades",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/students/10/accolades",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"10",
+								"accolades"
+							]
+						},
+						"description": "Get accolades for joe (student ID 10)"
+					},
+					"response": []
+				},
+				{
+					"name": "View Leaderboard",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/leaderboard",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"leaderboard"
+							]
+						},
+						"description": "Get leaderboard of all students sorted by hours"
+					},
+					"response": []
+				}
+			],
+			"description": "Student login and student-specific tests"
+		},
+		{
+			"name": "2. Switch User",
+			"item": [
+				{
+					"name": "Logout",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"logout"
+							]
+						},
+						"description": "Logout (switch from student to staff)"
+					},
+					"response": []
+				}
+			],
+			"description": "Logout before switching to staff user"
+		},
+		{
+			"name": "3. Staff Tests",
+			"item": [
+				{
+					"name": "Login (Staff)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"token\", jsonData.access_token);",
+									"    pm.environment.set(\"token\", jsonData.access_token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"staff5\",\n  \"password\": \"5678\",\n  \"role\": \"Staff\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						},
+						"description": "Login as staff user (staff5) with role Staff"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Students",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/students",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"students"
+							]
+						},
+						"description": "Get list of all students (staff only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current Staff Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/staff/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"staff",
+								"me"
+							]
+						},
+						"description": "Get profile of currently logged-in staff member"
+					},
+					"response": []
+				},
+				{
+					"name": "Log Hours for Student",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"student_id\": 10,\n  \"hours\": 10\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/staff/log-hours",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"staff",
+								"log-hours"
+							]
+						},
+						"description": "Staff logs hours for student joe (ID 10)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Pending Confirmations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/staff/pending-confirmations",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"staff",
+								"pending-confirmations"
+							]
+						},
+						"description": "Get all students with pending confirmation requests"
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm Student Hours",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"student_id\": 10\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/staff/confirm-hours",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"staff",
+								"confirm-hours"
+							]
+						},
+						"description": "Staff confirms hours for student joe (ID 10)"
+					},
+					"response": []
+				}
+			],
+			"description": "Staff login and staff-specific tests"
+		}
+	]
 }
