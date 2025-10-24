@@ -1,0 +1,125 @@
+Unit Test Plan
+
+
+Unit Test ID
+Test Name
+Input
+Expected Output
+UT-01
+Valid Staff Login
+role = "Staff"
+username = "staff_doe"
+password = "Staff"
+login_success = True
+redirect = "StaffDashboard"
+UT-02
+Invalid Staff Login
+role = "Staff"
+username = "staff_doe"
+password = "wrongpass"
+login_success = False
+error_message = "Invalid credentials"
+UT-03
+Forgot  Password (Staff)
+email = "staff_doe@mail.com"
+email_sent = True
+message = "Password reset link sent"
+UT-04
+Help Access Button
+click_help_button()
+help_modal_visible = True
+UT-05
+Log Student Hours Form Display
+click("Log Student Hours")
+form_fields = ["Student Name", "Activity", "Hours Worked", "Date"]
+UT-06
+Submit Valid Student Hours
+student_name = "Jane"
+activity = "Food Drive"
+hours = 5
+date = "2025-10-18"
+log_success = True
+message = "Hours logged successfully"
+UT-07
+Submit Empty Hours Form
+student_name = ""
+activity = ""
+hours = ""
+date = ""
+log_success = False
+error_message = "All fields are required"
+UT-08
+Confirm Requests Display
+click("Confirm Requests")
+request_list_displayed = True
+UT-09
+Approve Student Requests
+request_id = 3
+action = "Approve"
+request_status = "Approved"
+UT-10
+Reject Student Request
+request_id = 2
+action = "Reject"
+request_status = "Rejected"
+UT-11
+View Leaderboard (Staff)
+click("View Leaderboard")
+leaderboard_visible = True
+UT-12
+Valid Student Login
+role = "Student"
+username = "student_jane"
+password = "Student"
+login_success = True
+redirect = "StudentDashboard"
+UT-13
+Invalid Student Login
+role = "Student"
+username = "student_jane"
+password = "wrongpass”
+login_success = False
+error_message = "Invalid credentials"
+UT-14
+Request Hours Form Display
+click("Request Confirmation of Hours")
+form_fields = ["Activity Description", "Expected Hours", "Date"]
+UT-15
+Submit Valid Hour Request
+activity = "Beach Cleanup"
+expected_hours = 6
+date = "2025-10-20"
+request_success = True
+message = "Request sent to staff"
+UT-16
+Submit Empty Hour Request
+activity = ""
+expected_hours = ""
+date = ""
+request_success = False
+error_message = "All fields are required"
+UT-17
+View Accolades Display
+click("View Accolades")
+accolades_list = ["Food Drive – 5 hrs", "Beach Cleanup – 6 hrs", "Tutoring – 10 hrs"]
+UT-18
+Accolade Threshold Check
+total_hours = 10
+accolade_awarded = "Bronze Badge"
+UT-19
+View Leaderboard (Student)
+click("View Leaderboard")
+leaderboard_displayed = True
+UT-20
+Leaderboard Display
+open("Leaderboard")
+leaderboard_entries = [{"rank":1,"name":"F. Greg","hours":50}, {"rank":2,"name":"C. Day","hours":25}, {"rank":3,"name":"H. Inn","hours":10}]
+UT-21
+Leaderboard Ranking Order
+leaderboard_data = [("F. Greg",50),("C. Day",25),("H. Inn",10)]
+sorted_by_hours_desc = True
+UT-22
+Empty Leaderboard
+leaderboard_data = []
+message = "No records found"
+
